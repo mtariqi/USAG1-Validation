@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>USAG-1 Tooth Regeneration — Bioinformatics Validation Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink:       #0d1117;
+      --page:      #f7f6f2;
+      --ivory:     #edeae1;
+      --accent:    #1a6b45;
+      --accent2:   #c1440e;
+      --muted:     #6b7280;
+      --border:    #d4d0c8;
+      --mono:      'IBM Plex Mono', monospace;
+      --serif:     'Fraunces', Georgia, serif;
+      --sans:      'Inter', system-ui, sans-serif;
+      --radius:    4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--page);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--ink);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 52px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #fff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.4rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #aab;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      background: var(--ink);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: 'SOSTDC1';
+      position: absolute;
+      right: -1rem; top: 50%; transform: translateY(-50%);
+      font-family: var(--serif);
+      font-size: clamp(6rem, 16vw, 14rem);
+      font-weight: 700;
+      color: rgba(255,255,255,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block; width: 32px; height: 2px;
+      background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.1rem, 5vw, 3.6rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    h1 em { font-style: italic; color: #b8d8c8; }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .meta-chip {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 2px;
+      color: #ccc;
+      letter-spacing: 0.05em;
+    }
+    .meta-chip b { color: var(--accent); }
+
+    /* ── SECTION BASE ─────────────────────────────── */
+    section { padding: 4rem 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.4rem;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+    }
+    .divider {
+      width: 48px; height: 3px;
+      background: var(--accent);
+      margin: 1rem 0 2rem;
+    }
+    p { margin-bottom: 1rem; color: #2d3748; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── RATIONALE BLOCK ──────────────────────────── */
+    .rationale {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+    .rationale-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .rationale p { color: #374151; }
+
+    /* ── MODULE CARDS ─────────────────────────────── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .module-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.2s;
+    }
+    .module-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+    .module-header {
+      background: var(--ink);
+      padding: 1.1rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .module-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      background: rgba(26,107,69,0.15);
+      border: 1px solid var(--accent);
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .module-title {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .module-body { padding: 1.4rem 1.5rem; }
+    .module-goal {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .module-body p { font-size: 0.9rem; color: #374151; margin-bottom: 1rem; }
+    .tool-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+    .pill {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+    .pill-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .pill-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .pill-amber { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .pill-rose  { background: #ffe4e6; color: #9f1239; border: 1px solid #fecdd3; }
+    .pill-purple{ background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
+    .outcome-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent2);
+      border-top: 1px solid var(--border);
+      padding-top: 0.8rem;
+      width: 100%;
+    }
+
+    /* ── DATA TABLE ───────────────────────────────── */
+    .data-table-wrap { overflow-x: auto; margin-top: 2rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    thead { background: var(--ink); color: #fff; }
+    thead th {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 1rem;
+      text-align: left;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:hover { background: var(--ivory); }
+    td { padding: 0.85rem 1rem; vertical-align: top; }
+    td:first-child { font-family: var(--mono); font-size: 0.8rem; color: var(--accent2); font-weight: 600; }
+    td:nth-child(2) { font-weight: 500; }
+
+    /* ── PIPELINE DIAGRAM ─────────────────────────── */
+    .pipeline {
+      background: var(--ink);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+    .pipeline-inner {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: 600px;
+    }
+    .pipe-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .pipe-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .pipe-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      padding: 0.9rem 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: #cdd;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      transition: background 0.2s;
+    }
+    .pipe-box:hover { background: rgba(26,107,69,0.2); border-color: var(--accent); }
+    .pipe-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+
+    /* ── FILE TREE ────────────────────────────────── */
+    .file-tree {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: #c9d1d9;
+      line-height: 2;
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+    .ft-dir { color: #79c0ff; }
+    .ft-file { color: #c9d1d9; }
+    .ft-comment { color: #6e7681; font-style: italic; }
+    .ft-py { color: #f0883e; }
+    .ft-r  { color: #56d364; }
+    .ft-md { color: #d2a8ff; }
+
+    /* ── TIMELINE ─────────────────────────────────── */
+    .timeline { margin-top: 2rem; position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 5.5rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .tl-item {
+      display: flex; gap: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .tl-week {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent2);
+      width: 4rem;
+      flex-shrink: 0;
+      text-align: right;
+      padding-top: 0.1rem;
+      letter-spacing: 0.06em;
+    }
+    .tl-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--page);
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tl-content h4 {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .tl-content p { font-size: 0.875rem; color: var(--muted); margin-bottom: 0; }
+
+    /* ── HYPOTHESIS ───────────────────────────────── */
+    .hypothesis-box {
+      background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);
+      border: 1px solid rgba(26,107,69,0.4);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin: 2rem 0;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hypothesis-box::before {
+      content: '"';
+      position: absolute;
+      top: -1rem; left: 1.5rem;
+      font-family: var(--serif);
+      font-size: 8rem;
+      color: rgba(26,107,69,0.2);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .hypothesis-box blockquote {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.6;
+      color: #e8f4ee;
+      position: relative;
+      z-index: 1;
+    }
+    .hypothesis-box cite {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-top: 1rem;
+      font-style: normal;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── BADGES / SHIELDS ─────────────────────────── */
+    .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+    .badge-dark  { background: #1f6feb; color: #fff; }
+    .badge-green { background: #238636; color: #fff; }
+    .badge-orange{ background: #9e6a03; color: #fff; }
+    .badge-gray  { background: #6e7681; color: #fff; }
+
+    /* ── CALLOUT ──────────────────────────────────── */
+    .callout {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+      color: #78350f;
+    }
+    .callout strong { color: #92400e; }
+
+    /* ── ALTBG SECTIONS ───────────────────────────── */
+    .bg-ivory { background: var(--ivory); }
+    .bg-ink { background: var(--ink); color: #fff; }
+    .bg-ink p { color: #aab; }
+    .bg-ink h2 { color: #fff; }
+    .bg-ink .divider { background: var(--accent2); }
+    .bg-ink .section-label { color: #7dd3b8; }
+
+    /* ── FOOTER ───────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: #6e7681;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      border-top: 2px solid var(--accent);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer .footer-title {
+      color: #fff;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 640px) {
+      .modules-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero { padding: 3rem 1.2rem 2.5rem; }
+      section { padding: 3rem 1.2rem; }
+      .timeline::before { left: 4rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+
+    /* ── SCROLL ANIMATION ─────────────────────────── */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">// <span>USAG-1</span> · Validation Project</span>
+  <ul class="nav-links">
+    <li><a href="#rationale">Rationale</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#data">Data Sources</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#structure">Repo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Bioinformatics Validation Project</div>
+    <h1>Computational Validation of <em>USAG-1 (SOSTDC1)</em><br>as a Human Tooth Regeneration Target</h1>
+    <p style="color:#b0bec5; font-size:1.05rem; max-width:620px; margin-top:1rem; line-height:1.7;">
+      A six-module bioinformatics framework to independently validate the mechanistic, structural,
+      and translational evidence underlying the TRG035 Phase I clinical trial — from gene expression
+      atlas mining to ML-based biomarker discovery.
+    </p>
+    <div class="hero-meta">
+      <span class="meta-chip"><b>Gene:</b> SOSTDC1 / USAG-1</span>
+      <span class="meta-chip"><b>Pathway:</b> BMP · Wnt signaling</span>
+      <span class="meta-chip"><b>Trial:</b> TRG035 Phase I (Japan)</span>
+      <span class="meta-chip"><b>Modules:</b> 6</span>
+      <span class="meta-chip"><b>Species:</b> H. sapiens · M. musculus</span>
+    </div>
+  </div>
+</header>
+
+<!-- BADGES -->
+<section style="padding:1.5rem 2rem; background:#f0ede4; border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="badges">
+      <span class="badge badge-dark">R / Bioconductor</span>
+      <span class="badge badge-dark">Python 3.10+</span>
+      <span class="badge badge-green">Open Data</span>
+      <span class="badge badge-green">Reproducible</span>
+      <span class="badge badge-orange">Phase I Support</span>
+      <span class="badge badge-gray">AlphaFold2</span>
+      <span class="badge badge-gray">scRNA-seq</span>
+      <span class="badge badge-gray">STRING PPI</span>
+    </div>
+  </div>
+</section>
+
+<!-- RATIONALE -->
+<section id="rationale">
+  <div class="container fade-in">
+    <div class="section-label">Scientific Rationale</div>
+    <h2>Why Computational Validation Matters Here</h2>
+    <div class="divider"></div>
+
+    <div class="hypothesis-box">
+      <blockquote>
+        Blocking USAG-1 — a BMP antagonist and Wnt signaling modulator — removes a
+        developmental brake on tooth germ activation, enabling a third dentition in mammals.
+        The critical question is whether this mechanism is conserved and therapeutically
+        accessible in adult humans.
+      </blockquote>
+      <cite>— Core hypothesis driving TRG035 (anti-USAG-1 antibody), Phase I, Japan 2024</cite>
+    </div>
+
+    <p>
+      The Japanese team's work has progressed from a 2021 <em>Scientific Reports</em> mouse study through
+      to a completed Phase I single-dose safety trial (TRG035) in 30 adult men with molar agenesis.
+      While the clinical safety endpoint is now answerable, the mechanistic and translational
+      biology remain computationally unvalidated using current public multi-omic resources.
+    </p>
+    <p>
+      This project bridges that gap. It does not replicate the clinical trial — it provides
+      independent, data-driven validation of the biological premises that justify taking this
+      therapy into humans: tissue-specific expression, protein interaction architecture,
+      structural druggability, variant-phenotype correlation, pathway conservation across
+      species, and biomarker feasibility.
+    </p>
+
+    <div class="rationale">
+      <div class="rationale-label">Biological Background</div>
+      <p>
+        USAG-1, encoded by <strong>SOSTDC1</strong>, is a secreted protein belonging to the
+        DAN/Cerberus family of BMP antagonists. It exerts dual inhibition: (1) direct binding to
+        BMP-2, BMP-4, and BMP-7, blocking their receptor engagement; and (2) modulation of canonical
+        Wnt signaling through interaction with the co-receptor LRP5/6. Both pathways are
+        rate-limiting for odontogenesis — the embryonic program responsible for tooth formation.
+      </p>
+      <p>
+        In wild-type adult mice, tooth germ rudiments exist but are developmentally arrested.
+        USAG-1 knockout or anti-USAG-1 antibody administration restores BMP-Wnt signaling
+        sufficiently to reactivate these rudiments. Whether equivalent rudimentary structures
+        exist in adult humans, and whether their signaling circuitry is sufficiently conserved,
+        is the translational crux this project addresses computationally.
+      </p>
+    </div>
+
+    <div class="callout">
+      <strong>Key gap addressed:</strong> No published study has cross-validated USAG-1's
+      BMP/Wnt dual-inhibition mechanism using current human single-cell transcriptomics,
+      population-scale variant data, or structural docking against the clinical antibody's
+      inferred epitope — this project does all three.
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules" class="bg-ivory">
+  <div class="container fade-in">
+    <div class="section-label">Project Architecture</div>
+    <h2>Six Validation Modules</h2>
+    <div class="divider"></div>
+    <p>Each module maps onto a distinct validation question, is independently executable,
+    and produces a deliverable artifact (figure, network, model, or table) suitable for publication.</p>
+
+    <div class="modules-grid">
+
+      <!-- M1 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-01</span>
+          <span class="module-title">Gene Expression & Tissue Specificity</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Confirm where and when <em>SOSTDC1</em> is expressed in human dental tissues using
+            publicly available bulk RNA-seq and single-cell atlases. Quantify expression across
+            cell types in gingiva, dental pulp, jaw, and kidney (the primary expression site).
+          </p>
+          <p>
+            Perform differential expression analysis across tooth developmental pseudotime
+            trajectories. Identify co-expressed gene modules using WGCNA to map the USAG-1
+            regulatory neighborhood in each tissue compartment.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-green">Seurat</span>
+            <span class="pill pill-green">Scanpy</span>
+            <span class="pill pill-green">DESeq2</span>
+            <span class="pill pill-green">edgeR</span>
+            <span class="pill pill-blue">WGCNA</span>
+            <span class="pill pill-blue">GEO2R</span>
+            <span class="pill pill-blue">CellxGene</span>
+          </div>
+          <span class="outcome-tag">📊 Output: Cell-type expression atlas · Co-expression network</span>
+        </div>
+      </div>
+
+      <!-- M2 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-02</span>
+          <span class="module-title">Protein–Protein Interaction Network</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Build and analyse a high-confidence PPI network centred on USAG-1/SOSTDC1 using
+            STRING, BioGRID, and IntAct. Confirm the key regulatory nodes: LRP5, DKK4, BMP2,
+            BMP4, and BMP7. Score edge confidence and compute network topology metrics
+            (betweenness centrality, clustering coefficient, hub score).
+          </p>
+          <p>
+            Perform cross-species comparison of the human vs. mouse interactome to quantify
+            translational fidelity — the degree to which the mouse KO biology predicts human
+            responses to TRG035.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-amber">STRING API</span>
+            <span class="pill pill-amber">Cytoscape</span>
+            <span class="pill pill-amber">NetworkX</span>
+            <span class="pill pill-amber">igraph</span>
+            <span class="pill pill-blue">BioGRID</span>
+            <span class="pill pill-blue">IntAct</span>
+          </div>
+          <span class="outcome-tag">🕸 Output: Annotated PPI graph · Cross-species conservation score</span>
+        </div>
+      </div>
+
+      <!-- M3 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-03</span>
+          <span class="module-title">Structural Biology & Antibody Docking</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Computationally validate the TRG035 mechanism using the AlphaFold2 model of
+            USAG-1 (UniProt Q6X4U4). Dock BMP-7 and LRP5/6 peptides to define the two
+            binding interfaces independently. Confirm the published finding that blocking the
+            BMP-binding interface (not LRP5/6) is the functional mechanism of tooth induction.
+          </p>
+          <p>
+            Run molecular dynamics simulation to assess interface stability and identify
+            druggable pockets via virtual screening. Map TRG035's inferred epitope residues
+            onto the structure and compute binding free energy estimates.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-rose">AlphaFold2</span>
+            <span class="pill pill-rose">AutoDock Vina</span>
+            <span class="pill pill-rose">HADDOCK</span>
+            <span class="pill pill-rose">GROMACS</span>
+            <span class="pill pill-blue">PyMOL</span>
+            <span class="pill pill-blue">FPocket</span>
+          </div>
+          <span class="outcome-tag">🔬 Output: Docked complex structures · Binding free energy table</span>
+        </div>
+      </div>
+
+      <!-- M4 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-04</span>
+          <span class="module-title">Variant & Mutation Analysis</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Query gnomAD, ClinVar, and OMIM for SOSTDC1 population-scale variants. Classify
+            variants by predicted functional impact using PolyPhen-2, SIFT, CADD, and
+            EVmutation. Map damaging variants onto the AlphaFold structure to identify
+            interface-disrupting mutations.
+          </p>
+          <p>
+            Identify variants that segregate with hypodontia phenotypes and model whether they
+            alter the BMP or Wnt binding interface — this predicts which patient sub-populations
+            are most likely to respond to TRG035, directly informing Phase II stratification.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-purple">gnomAD</span>
+            <span class="pill pill-purple">ClinVar</span>
+            <span class="pill pill-purple">PolyPhen-2</span>
+            <span class="pill pill-purple">SIFT</span>
+            <span class="pill pill-purple">CADD</span>
+            <span class="pill pill-blue">HOPE Tool</span>
+            <span class="pill pill-blue">EVmutation</span>
+          </div>
+          <span class="outcome-tag">🧬 Output: Variant-function map · Patient stratification model</span>
+        </div>
+      </div>
+
+      <!-- M5 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-05</span>
+          <span class="module-title">Pathway Enrichment & Cross-Species Conservation</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Validate that BMP/Wnt signaling disruption in mouse USAG-1 KO models translates
+            biologically to human dental transcriptomes. Perform GSEA and pathway enrichment
+            (KEGG, Reactome, GO) on SOSTDC1 co-expressed gene sets in both species.
+          </p>
+          <p>
+            Use biomaRt for ortholog mapping between human and mouse. Build a quantitative
+            pathway conservation score — a key metric for interpreting TRG035's translational
+            validity. Report discordant pathways as potential safety flags.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-green">fgsea</span>
+            <span class="pill pill-green">clusterProfiler</span>
+            <span class="pill pill-green">g:Profiler</span>
+            <span class="pill pill-blue">biomaRt</span>
+            <span class="pill pill-blue">KEGG</span>
+            <span class="pill pill-blue">Reactome</span>
+          </div>
+          <span class="outcome-tag">📈 Output: GSEA plots · Cross-species conservation matrix</span>
+        </div>
+      </div>
+
+      <!-- M6 -->
+      <div class="module-card">
+        <div class="module-header">
+          <span class="module-num">MOD-06</span>
+          <span class="module-title">ML-Based Biomarker Discovery</span>
+        </div>
+        <div class="module-body">
+          <div class="module-goal">Goal</div>
+          <p>
+            Identify a transcriptomic biomarker signature in accessible biofluids (blood or
+            saliva) that correlates with BMP pathway activation — a proxy for pharmacodynamic
+            response to USAG-1 inhibition. This addresses the critical unmet need in the
+            TRG035 trial: how do you know the drug is working before tooth formation is visible?
+          </p>
+          <p>
+            Apply LASSO regression and random forest feature selection to BMP-pathway gene
+            sets across public dental/systemic datasets. Validate the signature via cross-
+            validation and external cohort testing.
+          </p>
+          <div class="tool-pills">
+            <span class="pill pill-rose">scikit-learn</span>
+            <span class="pill pill-rose">glmnet</span>
+            <span class="pill pill-rose">limma</span>
+            <span class="pill pill-amber">Random Forest</span>
+            <span class="pill pill-amber">LASSO</span>
+            <span class="pill pill-blue">SHAP</span>
+          </div>
+          <span class="outcome-tag">🤖 Output: Biomarker gene signature · ROC / AUC validation</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline" class="bg-ink">
+  <div class="container fade-in">
+    <div class="section-label">Analysis Flow</div>
+    <h2>End-to-End Pipeline</h2>
+    <div class="divider"></div>
+    <p>Data flows from public repositories through each analytical module toward translational outputs.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-inner">
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">🗄️</div>
+            GEO / UniProt<br>gnomAD / PDB<br>CellxGene
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">🔬</div>
+            scRNA-seq<br>Preprocessing<br>Scanpy · Seurat
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">🧬</div>
+            DE Analysis<br>PPI Network<br>Variant Mining
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">🏗️</div>
+            Structure<br>Docking &<br>MD Simulation
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">📊</div>
+            GSEA / Pathway<br>Cross-Species<br>Conservation
+          </div>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-box">
+            <div class="pipe-icon">🤖</div>
+            ML Biomarker<br>Signature &<br>Validation
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rationale" style="margin-top:2rem; background:rgba(255,255,255,0.05); border-color:var(--accent2);">
+      <div class="rationale-label" style="color:var(--accent);">Integration Logic</div>
+      <p style="color:#aab;">
+        Modules 1–2 establish the expression and interaction context. Module 3 tests structural
+        mechanistic claims. Module 4 identifies patient-stratification signals. Module 5 validates
+        cross-species translation. Module 6 produces the only output with direct clinical utility
+        in the ongoing trial: a pharmacodynamic biomarker.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- DATA SOURCES -->
+<section id="data">
+  <div class="container fade-in">
+    <div class="section-label">Data Infrastructure</div>
+    <h2>Primary Data Sources</h2>
+    <div class="divider"></div>
+    <p>All data is publicly available, reproducibly accessible, and version-pinned via GEO accessions or versioned database dumps.</p>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>What to Pull</th>
+            <th>Module(s)</th>
+            <th>Access</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GEO / ArrayExpress</td>
+            <td>Dental pulp, gingiva, jaw tissue bulk and scRNA-seq datasets (search: "odontogenesis", "dental pulp RNA-seq", "gingival single cell")</td>
+            <td>M1, M5</td>
+            <td>Free / GEOquery R package</td>
+          </tr>
+          <tr>
+            <td>CellxGene Census</td>
+            <td>Human jaw, gingiva, and kidney single-cell expression data; filter by tissue ontology terms</td>
+            <td>M1</td>
+            <td>Free / cellxgene-census Python API</td>
+          </tr>
+          <tr>
+            <td>UniProt Q6X4U4</td>
+            <td>USAG-1 canonical FASTA sequence, domain annotations, AlphaFold2 structural model (.pdb)</td>
+            <td>M3, M4</td>
+            <td>Free / REST API</td>
+          </tr>
+          <tr>
+            <td>STRING v12 (SOSTDC1)</td>
+            <td>Human PPI network with confidence scores; mouse ortholog network for cross-species comparison</td>
+            <td>M2, M5</td>
+            <td>Free / STRING API or Cytoscape plugin</td>
+          </tr>
+          <tr>
+            <td>gnomAD v4</td>
+            <td>SOSTDC1 coding variants, allele frequencies, pLI / LOEUF constraint metrics</td>
+            <td>M4</td>
+            <td>Free / gnomAD browser or Hail query</td>
+          </tr>
+          <tr>
+            <td>ClinVar / OMIM</td>
+            <td>SOSTDC1 pathogenic variants; hypodontia and tooth agenesis phenotype associations</td>
+            <td>M4</td>
+            <td>Free / NCBI E-utilities</td>
+          </tr>
+          <tr>
+            <td>PDB / RCSB</td>
+            <td>BMP-7 crystal structure (PDB: 1LXI), LRP6 CRD domain for docking reference</td>
+            <td>M3</td>
+            <td>Free / PDB REST API</td>
+          </tr>
+          <tr>
+            <td>KEGG / Reactome</td>
+            <td>BMP signaling, Wnt signaling, tooth development pathway gene sets for GSEA</td>
+            <td>M5</td>
+            <td>Free / clusterProfiler, fgsea</td>
+          </tr>
+          <tr>
+            <td>MSigDB (C2, C5)</td>
+            <td>Curated BMP/Wnt gene sets, ontology-based gene sets for enrichment analysis</td>
+            <td>M5, M6</td>
+            <td>Free / msigdbr R package</td>
+          </tr>
+          <tr>
+            <td>jRCT Portal (Japan)</td>
+            <td>TRG035 Phase I trial design, dose levels, primary endpoints for biological context</td>
+            <td>M6 (context)</td>
+            <td>Free / jRCT2051240154</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline" class="bg-ivory">
+  <div class="container fade-in">
+    <div class="section-label">Project Plan</div>
+    <h2>Execution Timeline (12 Weeks)</h2>
+    <div class="divider"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="tl-week">WK 1–2</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Environment Setup & Data Acquisition</h4>
+          <p>Configure R / Python environments, Conda env files, Snakemake workflow. Download and version-pin all GEO accessions, UniProt structures, gnomAD VCF. Set up GitHub repository with README, CITATION.cff, and data manifest.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 3–4</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 1 — Expression Atlas</h4>
+          <p>Process scRNA-seq datasets (QC, normalisation, clustering, cell-type annotation). Generate SOSTDC1 expression violin plots, UMAP embeddings, and co-expression modules per tissue.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 5</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 2 — PPI Network</h4>
+          <p>Build STRING network, export to Cytoscape, compute topology metrics. Cross-species ortholog mapping via biomaRt. Generate network visualisation with hub annotation.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 6–7</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 3 — Structural Docking</h4>
+          <p>Prepare AlphaFold model, dock BMP-7 and LRP6 peptides, run short MD equilibration. Compute MM-GBSA binding free energies. Visualise epitope surfaces in PyMOL.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 8</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 4 — Variant Analysis</h4>
+          <p>Pull gnomAD / ClinVar variants, run in silico pathogenicity scoring, map onto USAG-1 structure. Generate variant-effect matrix highlighting interface-disrupting mutations.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 9</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 5 — Pathway Enrichment</h4>
+          <p>Run GSEA for BMP / Wnt gene sets in human and mouse co-expression data. Compute cross-species pathway conservation score. Flag discordant pathways as translational risk signals.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 10–11</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Module 6 — Biomarker ML Model</h4>
+          <p>Curate BMP-response transcriptomic datasets from saliva / blood. Train LASSO and random forest models. Evaluate performance (ROC-AUC, precision-recall). Generate SHAP explainability plots.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-week">WK 12</span>
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <h4>Integration, Figures & Manuscript Draft</h4>
+          <p>Assemble cross-module findings. Generate publication-quality figures (ggplot2, matplotlib). Write results, discussion, and supplementary methods. Publish GitHub release v1.0.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPO STRUCTURE -->
+<section id="structure">
+  <div class="container fade-in">
+    <div class="section-label">GitHub Repository</div>
+    <h2>Suggested Repository Structure</h2>
+    <div class="divider"></div>
+    <p>Designed for full reproducibility: every analysis step is scripted, every dataset is versioned, and the workflow is orchestrated with Snakemake.</p>
+
+    <div class="file-tree">
+<span class="ft-dir">USAG1-Validation/</span><br>
+├── <span class="ft-md">README.md</span>             <span class="ft-comment"># Project overview, installation, quick-start</span><br>
+├── <span class="ft-md">CITATION.cff</span>          <span class="ft-comment"># Citation metadata for GitHub Cite This Repository</span><br>
+├── <span class="ft-md">LICENSE</span>               <span class="ft-comment"># MIT License</span><br>
+├── <span class="ft-file">Snakefile</span>            <span class="ft-comment"># End-to-end workflow orchestration</span><br>
+├── <span class="ft-file">environment.yml</span>      <span class="ft-comment"># Conda environment (Python + R dependencies)</span><br>
+├── <span class="ft-file">renv.lock</span>            <span class="ft-comment"># R package lockfile (renv)</span><br>
+│<br>
+├── <span class="ft-dir">data/</span><br>
+│   ├── <span class="ft-dir">raw/</span>              <span class="ft-comment"># Downloaded GEO, VCF, PDB files (gitignored)</span><br>
+│   ├── <span class="ft-dir">processed/</span>        <span class="ft-comment"># Cleaned, normalised matrices</span><br>
+│   └── <span class="ft-md">manifest.tsv</span>      <span class="ft-comment"># Accessions, URLs, checksums, download date</span><br>
+│<br>
+├── <span class="ft-dir">01_expression/</span><br>
+│   ├── <span class="ft-py">01_download_geo.py</span>  <span class="ft-comment"># GEO + CellxGene data retrieval</span><br>
+│   ├── <span class="ft-r">02_qc_normalise.R</span>   <span class="ft-comment"># Seurat QC pipeline</span><br>
+│   ├── <span class="ft-r">03_clustering.R</span>     <span class="ft-comment"># UMAP + cell-type annotation</span><br>
+│   ├── <span class="ft-r">04_DESeq2.R</span>         <span class="ft-comment"># Differential expression</span><br>
+│   └── <span class="ft-r">05_WGCNA.R</span>          <span class="ft-comment"># Co-expression network</span><br>
+│<br>
+├── <span class="ft-dir">02_PPI_network/</span><br>
+│   ├── <span class="ft-py">01_string_query.py</span>  <span class="ft-comment"># STRING API pull, edge scoring</span><br>
+│   ├── <span class="ft-py">02_network_topology.py</span>  <span class="ft-comment"># NetworkX topology metrics</span><br>
+│   └── <span class="ft-r">03_cross_species.R</span>  <span class="ft-comment"># Human vs mouse PPI comparison</span><br>
+│<br>
+├── <span class="ft-dir">03_structural/</span><br>
+│   ├── <span class="ft-py">01_fetch_alphafold.py</span>   <span class="ft-comment"># Download USAG-1 AF2 model</span><br>
+│   ├── <span class="ft-file">02_docking_config.txt</span>   <span class="ft-comment"># AutoDock Vina config</span><br>
+│   ├── <span class="ft-py">03_run_docking.py</span>       <span class="ft-comment"># BMP-7 + LRP6 docking</span><br>
+│   ├── <span class="ft-py">04_md_prep.py</span>           <span class="ft-comment"># GROMACS topology prep</span><br>
+│   └── <span class="ft-py">05_binding_energy.py</span>    <span class="ft-comment"># MM-GBSA free energy</span><br>
+│<br>
+├── <span class="ft-dir">04_variants/</span><br>
+│   ├── <span class="ft-py">01_gnomad_query.py</span>      <span class="ft-comment"># SOSTDC1 variant pull</span><br>
+│   ├── <span class="ft-r">02_pathogenicity.R</span>      <span class="ft-comment"># PolyPhen-2 / SIFT / CADD scoring</span><br>
+│   └── <span class="ft-py">03_structure_mapping.py</span> <span class="ft-comment"># Map variants to AF2 structure</span><br>
+│<br>
+├── <span class="ft-dir">05_pathways/</span><br>
+│   ├── <span class="ft-r">01_gsea_human.R</span>         <span class="ft-comment"># fgsea, KEGG/Reactome enrichment</span><br>
+│   ├── <span class="ft-r">02_gsea_mouse.R</span>         <span class="ft-comment"># Mouse KO dataset enrichment</span><br>
+│   └── <span class="ft-r">03_conservation_score.R</span> <span class="ft-comment"># Cross-species pathway conservation</span><br>
+│<br>
+├── <span class="ft-dir">06_biomarkers/</span><br>
+│   ├── <span class="ft-py">01_data_curation.py</span>     <span class="ft-comment"># Biofluid transcriptome curation</span><br>
+│   ├── <span class="ft-py">02_lasso_model.py</span>       <span class="ft-comment"># glmnet / sklearn LASSO</span><br>
+│   ├── <span class="ft-py">03_random_forest.py</span>     <span class="ft-comment"># RF feature selection + SHAP</span><br>
+│   └── <span class="ft-py">04_validation.py</span>        <span class="ft-comment"># Cross-validation + ROC-AUC</span><br>
+│<br>
+├── <span class="ft-dir">figures/</span>               <span class="ft-comment"># Publication-quality outputs (PDF + PNG)</span><br>
+├── <span class="ft-dir">notebooks/</span>             <span class="ft-comment"># Jupyter + R Markdown exploratory notebooks</span><br>
+└── <span class="ft-dir">docs/</span>                  <span class="ft-comment"># GitHub Pages site (this HTML file)</span>
+    </div>
+
+    <div class="rationale" style="margin-top:2rem;">
+      <div class="rationale-label">GitHub Pages Deployment</div>
+      <p>
+        Place this HTML file at <code>docs/index.html</code> in your repository.
+        In GitHub Settings → Pages, set the source to <strong>Branch: main / Folder: /docs</strong>.
+        Your project website will be live at
+        <code>https://&lt;username&gt;.github.io/USAG1-Validation/</code> within minutes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="bg-ivory">
+  <div class="container fade-in">
+    <div class="section-label">Expected Outputs</div>
+    <h2>Deliverables & Translational Impact</h2>
+    <div class="divider"></div>
+
+    <div class="data-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Primary Deliverable</th>
+            <th>Translational Relevance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MOD-01</td>
+            <td>Cell-type resolved SOSTDC1 expression atlas in human dental tissues</td>
+            <td>Confirms target is present in adult human dental tissue — prerequisite for clinical relevance</td>
+          </tr>
+          <tr>
+            <td>MOD-02</td>
+            <td>Annotated PPI network with cross-species conservation score</td>
+            <td>Validates mouse-to-human mechanistic translation; identifies off-target interaction risk</td>
+          </tr>
+          <tr>
+            <td>MOD-03</td>
+            <td>BMP-7/LRP6 docked complexes; binding free energy comparison by interface</td>
+            <td>Structurally validates TRG035 epitope selectivity (BMP over LRP5/6 interface)</td>
+          </tr>
+          <tr>
+            <td>MOD-04</td>
+            <td>SOSTDC1 variant-effect map; patient stratification model</td>
+            <td>Predicts Phase II responder population; enables precision enrollment criteria</td>
+          </tr>
+          <tr>
+            <td>MOD-05</td>
+            <td>GSEA cross-species pathway conservation matrix</td>
+            <td>Quantifies translational risk; flags discordant pathways as Phase II safety signals</td>
+          </tr>
+          <tr>
+            <td>MOD-06</td>
+            <td>Saliva/blood BMP-response biomarker gene signature (5–15 genes, ROC-AUC &gt;0.80)</td>
+            <td>Provides a pharmacodynamic readout for TRG035 Phase II — fills the most critical clinical evidence gap</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:700px; margin:0 auto;">
+    <div class="footer-title">USAG-1 · Computational Validation Project</div>
+    <p style="margin-bottom:0.8rem;">
+      Gene: <strong style="color:#56d364;">SOSTDC1</strong> &nbsp;|&nbsp;
+      UniProt: <strong style="color:#56d364;">Q6X4U4</strong> &nbsp;|&nbsp;
+      Trial: <strong style="color:#56d364;">jRCT2051240154</strong>
+    </p>
+    <p style="margin-bottom:1.2rem; font-size:0.68rem; color:#484f58;">
+      All data sources are publicly available. This project constitutes independent
+      computational validation and is not affiliated with the TRG035 clinical programme
+      or Toregem Biopharma Inc.
+    </p>
+    <p>
+      Built for GitHub Pages &nbsp;·&nbsp;
+      Place at <code style="color:#79c0ff;">docs/index.html</code> &nbsp;·&nbsp;
+      Enable GitHub Pages in repository Settings
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
