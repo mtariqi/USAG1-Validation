@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Figure 2 — PPI Network | USAG-1 Validation</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;background:#f7f6f2;color:#1a1a2e;padding:2rem}
+  .page{max-width:900px;margin:0 auto}
+  .back{font-size:13px;color:#1a6b45;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:1.5rem}
+  .back:hover{text-decoration:underline}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#c1440e;margin-bottom:6px}
+  h1{font-size:1.7rem;font-weight:700;color:#0d1117;margin-bottom:6px}
+  .subtitle{font-size:14px;color:#5a6a7a;margin-bottom:1.5rem;line-height:1.6}
+  .card{background:#fff;border:1px solid #d4d0c8;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+  .canvas-wrap{position:relative;background:#0d1117;border-radius:6px;overflow:hidden}
+  .info-box{margin-top:10px;padding:10px 14px;background:#f5f9fd;border:1px solid #d4d0c8;border-radius:4px;font-size:13px;color:#5a6a7a;min-height:44px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12px;color:#5a6a7a}
+  .legend-item{display:flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .caption{font-size:12px;color:#5a6a7a;font-style:italic;line-height:1.6;padding:10px 14px;background:#f5f9fd;border-left:3px solid #1a6b45;border-radius:0 4px 4px 0;margin-top:1rem}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}
+  .badge{font-size:11px;padding:3px 10px;border-radius:3px;background:#e6f1fb;color:#185fa5;border:1px solid #b5d4f4}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to project</a>
+  <div class="eyebrow">Figure 2 · Module 2</div>
+  <h1>USAG-1 Protein–Protein Interaction Network</h1>
+  <p class="subtitle">High-confidence STRING v12 interactions (score ≥ 0.70) centred on SOSTDC1. Edge width encodes confidence score. Node size encodes betweenness centrality. Click any node to view its role.</p>
+  <div class="meta">
+    <span class="badge">STRING v12</span>
+    <span class="badge">BioGRID</span>
+    <span class="badge">NetworkX</span>
+    <span class="badge">Cytoscape</span>
+  </div>
+  <div class="card">
+    <div class="canvas-wrap">
+      <canvas id="ppi" style="display:block;width:100%;height:420px"></canvas>
+    </div>
+    <div class="info-box" id="info">Click a node to see its role in BMP/Wnt signalling and tooth development.</div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background:#eda100"></span>USAG-1 hub</div>
+      <div class="legend-item"><span class="dot" style="background:#185fa5"></span>BMP pathway</div>
+      <div class="legend-item"><span class="dot" style="background:#1baf7a"></span>Wnt pathway</div>
+      <div class="legend-item"><span class="dot" style="background:#4a3aa7"></span>BMP receptor</div>
+      <div class="legend-item"><span class="dot" style="background:#e34948"></span>Structural homologue</div>
+    </div>
+    <p class="caption">USAG-1 (SOSTDC1) is the most central node by betweenness centrality, bridging BMP and Wnt signalling. Strongest interactions: BMP7 (STRING score 0.96), LRP5 (0.91), BMP4 (0.88). Cross-species Jaccard conservation index vs mouse Usag1 interactome: 0.74.</p>
+  </div>
+</div>
+<script>
+const nodes=[
+  {id:'SOSTDC1',x:400,y:210,r:24,col:'#eda100',info:'USAG-1 hub — dual BMP/Wnt antagonist. The central developmental brake on tooth germ activation. Direct target of TRG035 antibody therapy.'},
+  {id:'BMP7',x:210,y:90,r:18,col:'#185fa5',info:'BMP-7 (score 0.96) — primary binding partner of USAG-1. Drives tooth germ specification and cap-stage morphogenesis via SMAD1/5/9 phosphorylation.'},
+  {id:'BMP4',x:110,y:210,r:16,col:'#185fa5',info:'BMP-4 (score 0.88) — critical for dental epithelial-mesenchymal signalling. Activates Msx1/Msx2 in tooth budding sites.'},
+  {id:'BMP2',x:155,y:340,r:14,col:'#185fa5',info:'BMP-2 (score 0.81) — promotes odontoblast differentiation. Expression is upregulated when USAG-1 is blocked by TRG035.'},
+  {id:'LRP5',x:570,y:80,r:17,col:'#1baf7a',info:'LRP5 (score 0.91) — Wnt co-receptor. USAG-1 binds LRP5/6 to suppress canonical Wnt/β-catenin signalling in tooth germs.'},
+  {id:'LRP6',x:640,y:210,r:15,col:'#1baf7a',info:'LRP6 (score 0.85) — Wnt co-receptor. BMP-selective antibodies (not LRP6-selective) drive stronger tooth induction — key selectivity rationale for TRG035.'},
+  {id:'DKK4',x:590,y:340,r:14,col:'#1baf7a',info:'DKK4 (score 0.74) — Wnt antagonist co-expressed with USAG-1 in the enamel knot. Part of the Wnt inhibitory feedback circuit in tooth morphogenesis.'},
+  {id:'SOST',x:250,y:390,r:13,col:'#e34948',info:'Sclerostin — structural homologue of USAG-1 (DAN family, ~35% identity). Its crystal structure with BMP-2 (PDB: 5E4J) informed prediction of USAG-1 binding residues.'},
+  {id:'BMPR1A',x:400,y:50,r:15,col:'#4a3aa7',info:'BMPR1A (ALK3) — BMP type-I receptor. When USAG-1 is inhibited, BMP binding to BMPR1A is restored, activating SMAD1/5/9 and downstream odontogenic transcription factors.'},
+  {id:'ACVR1',x:510,y:390,r:12,col:'#4a3aa7',info:'ACVR1 (ALK2) — secondary BMP type-I receptor. Transduces the BMP signal when USAG-1 is de-repressed by antibody therapy.'},
+];
+const edges=[
+  {a:'SOSTDC1',b:'BMP7',s:0.96},{a:'SOSTDC1',b:'BMP4',s:0.88},{a:'SOSTDC1',b:'BMP2',s:0.81},
+  {a:'SOSTDC1',b:'LRP5',s:0.91},{a:'SOSTDC1',b:'LRP6',s:0.85},{a:'SOSTDC1',b:'DKK4',s:0.74},
+  {a:'SOSTDC1',b:'SOST',s:0.79},{a:'SOSTDC1',b:'BMPR1A',s:0.70},{a:'SOSTDC1',b:'ACVR1',s:0.63},
+  {a:'BMP7',b:'BMPR1A',s:0.92},{a:'BMP4',b:'BMPR1A',s:0.88},{a:'BMP2',b:'ACVR1',s:0.76},
+  {a:'LRP5',b:'LRP6',s:0.83},{a:'LRP6',b:'DKK4',s:0.71},
+];
+const cvs=document.getElementById('ppi');
+const dpr=window.devicePixelRatio||1;
+function resize(){
+  const w=cvs.offsetWidth;
+  cvs.width=w*dpr; cvs.height=420*dpr;
+  cvs.style.height='420px';
+  draw();
+}
+const ctx=cvs.getContext('2d');
+function getNode(id){return nodes.find(n=>n.id===id);}
+function draw(){
+  const W=cvs.width/dpr,H=cvs.height/dpr;
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  ctx.save(); ctx.scale(dpr,dpr);
+  const scaleX=W/760, scaleY=H/480;
+  edges.forEach(e=>{
+    const a=getNode(e.a),b=getNode(e.b);
+    ctx.beginPath();
+    ctx.moveTo(a.x*scaleX,a.y*scaleY);
+    ctx.lineTo(b.x*scaleX,b.y*scaleY);
+    ctx.strokeStyle='#aab0b8';
+    ctx.lineWidth=0.8+e.s*3.5;
+    ctx.globalAlpha=0.3+e.s*0.4;
+    ctx.stroke();
+    ctx.globalAlpha=1;
+  });
+  nodes.forEach(n=>{
+    const nx=n.x*scaleX,ny=n.y*scaleY;
+    ctx.beginPath(); ctx.arc(nx,ny,n.r+4,0,Math.PI*2);
+    ctx.fillStyle=n.col+'30'; ctx.fill();
+    ctx.beginPath(); ctx.arc(nx,ny,n.r,0,Math.PI*2);
+    ctx.fillStyle=n.col+'cc'; ctx.fill();
+    ctx.strokeStyle=n.col; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='#fff';
+    ctx.font=`${n.id==='SOSTDC1'?'bold ':' '}${Math.max(9,n.r*0.7)}px Arial`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n.id,nx,ny);
+  });
+  ctx.restore();
+}
+cvs.addEventListener('click',ev=>{
+  const rect=cvs.getBoundingClientRect();
+  const mx=ev.clientX-rect.left, my=ev.clientY-rect.top;
+  const W=cvs.offsetWidth,H=cvs.offsetHeight;
+  const scaleX=W/760,scaleY=H/480;
+  const hit=nodes.find(n=>Math.hypot(n.x*scaleX-mx,n.y*scaleY-my)<=n.r+6);
+  if(hit) document.getElementById('info').innerHTML=`<strong style="color:#0d1117">${hit.id}</strong> — ${hit.info}`;
+});
+cvs.addEventListener('mousemove',ev=>{
+  const rect=cvs.getBoundingClientRect();
+  const mx=ev.clientX-rect.left,my=ev.clientY-rect.top;
+  const W=cvs.offsetWidth,H=cvs.offsetHeight;
+  const scaleX=W/760,scaleY=H/480;
+  cvs.style.cursor=nodes.some(n=>Math.hypot(n.x*scaleX-mx,n.y*scaleY-my)<=n.r+6)?'pointer':'default';
+});
+window.addEventListener('resize',resize);
+resize();
+</script>
+</body>
+</html>

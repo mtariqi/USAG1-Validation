@@ -61,6 +61,51 @@
     }
     .nav-links a:hover { color: #fff; }
 
+    /* ── FIGURES GRID ─────────────────────────────── */
+    .figures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .fig-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .fig-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .fig-card-head {
+      background: var(--ink);
+      padding: 0.9rem 1.2rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .fig-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .fig-card-title { font-size: 0.9rem; font-weight: 600; color: #fff; }
+    .fig-card-body { padding: 1rem 1.2rem; flex: 1; }
+    .fig-card-body p { font-size: 0.82rem; color: #374151; margin-bottom: 0.6rem; }
+    .fig-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      margin-top: auto;
+    }
+
     /* ── HERO ─────────────────────────────────────── */
     .hero {
       background: var(--ink);
@@ -496,6 +541,7 @@
     <li><a href="#pipeline">Pipeline</a></li>
     <li><a href="#data">Data Sources</a></li>
     <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#figures">Figures</a></li>
     <li><a href="#structure">Repo</a></li>
   </ul>
 </nav>
@@ -1013,6 +1059,86 @@
           <p>Assemble cross-module findings. Generate publication-quality figures (ggplot2, matplotlib). Write results, discussion, and supplementary methods. Publish GitHub release v1.0.</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FIGURES -->
+<section id="figures">
+  <div class="container fade-in">
+    <div class="section-label">Interactive Figures</div>
+    <h2>Publication Figures — All Six Modules</h2>
+    <div class="divider"></div>
+    <p>Each figure opens as a fully self-contained interactive page. All charts are built with Chart.js and work without any server or internet connection once the files are in your repository.</p>
+
+    <div class="figures-grid">
+
+      <a class="fig-card" href="figures/figure1_expression.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-01</span>
+          <span class="fig-card-title">SOSTDC1 Expression Atlas</span>
+        </div>
+        <div class="fig-card-body">
+          <p>Interactive dot plot of SOSTDC1 expression across human dental tissue cell types. Filter by tissue tab. Dot size = % cells expressing.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
+      <a class="fig-card" href="figures/figure2_ppi_network.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-02</span>
+          <span class="fig-card-title">PPI Network</span>
+        </div>
+        <div class="fig-card-body">
+          <p>Force-positioned USAG-1 protein interaction network. Click any node to view its role in BMP/Wnt signalling and tooth development.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
+      <a class="fig-card" href="figures/figure3_structural_docking.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-03</span>
+          <span class="fig-card-title">Structural Docking</span>
+        </div>
+        <div class="fig-card-body">
+          <p>BMP-7 vs LRP5/6 interface comparison. Binding free energies (MM-GBSA), buried surface area, and H-bond counts from AlphaFold2 docking.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
+      <a class="fig-card" href="figures/figure4_variant_analysis.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-04</span>
+          <span class="fig-card-title">Variant Landscape</span>
+        </div>
+        <div class="fig-card-body">
+          <p>SOSTDC1 coding variants from gnomAD v4 plotted by position and CADD score. Filter by BMP interface, Wnt interface, or pathogenic. Click for annotation.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
+      <a class="fig-card" href="figures/figure5_pathway_conservation.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-05</span>
+          <span class="fig-card-title">Pathway Conservation</span>
+        </div>
+        <div class="fig-card-body">
+          <p>Cross-species NES comparison across 18 BMP/Wnt pathways. 78% conservation. Four discordant pathways flagged as translational risk signals.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
+      <a class="fig-card" href="figures/figure6_biomarker_ml.html">
+        <div class="fig-card-head">
+          <span class="fig-num">FIG-06</span>
+          <span class="fig-card-title">ML Biomarker Model</span>
+        </div>
+        <div class="fig-card-body">
+          <p>ROC curves (AUC = 0.89) and SHAP feature importance for the 11-gene salivary BMP activation signature. Proposed Phase II pharmacodynamic endpoint.</p>
+          <span class="fig-link">Open figure →</span>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>

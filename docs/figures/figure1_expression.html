@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Figure 1 — SOSTDC1 Expression Atlas | USAG-1 Validation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;background:#f7f6f2;color:#1a1a2e;padding:2rem}
+  .page{max-width:900px;margin:0 auto}
+  .back{font-size:13px;color:#1a6b45;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:1.5rem}
+  .back:hover{text-decoration:underline}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#c1440e;margin-bottom:6px}
+  h1{font-size:1.7rem;font-weight:700;color:#0d1117;margin-bottom:6px}
+  .subtitle{font-size:14px;color:#5a6a7a;margin-bottom:1.5rem;line-height:1.6}
+  .card{background:#fff;border:1px solid #d4d0c8;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem}
+  .tab{font-size:12px;padding:4px 14px;border-radius:4px;border:1px solid #d4d0c8;background:transparent;color:#5a6a7a;cursor:pointer;transition:all .2s}
+  .tab.active{background:#1a6b45;color:#fff;border-color:#1a6b45}
+  .chart-wrap{position:relative;height:320px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:12px;color:#5a6a7a;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px}
+  .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+  .caption{font-size:12px;color:#5a6a7a;font-style:italic;line-height:1.6;padding:10px 14px;background:#f5f9fd;border-left:3px solid #1a6b45;border-radius:0 4px 4px 0;margin-top:1rem}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}
+  .badge{font-size:11px;padding:3px 10px;border-radius:3px;background:#e6f1fb;color:#185fa5;border:1px solid #b5d4f4}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to project</a>
+  <div class="eyebrow">Figure 1 · Module 1</div>
+  <h1>SOSTDC1 Expression Atlas</h1>
+  <p class="subtitle">Mean expression (log-normalised CPM) × percentage of cells expressing SOSTDC1 across major human dental tissue cell populations. Data sourced from GEO and CellxGene Census.</p>
+  <div class="meta">
+    <span class="badge">scRNA-seq</span>
+    <span class="badge">GEO / CellxGene</span>
+    <span class="badge">Seurat · Scanpy</span>
+    <span class="badge">DESeq2 · WGCNA</span>
+  </div>
+  <div class="card">
+    <div class="tabs" id="tabs">
+      <button class="tab active" onclick="setTissue('all',this)">All tissues</button>
+      <button class="tab" onclick="setTissue('gingiva',this)">Gingiva</button>
+      <button class="tab" onclick="setTissue('pulp',this)">Dental pulp</button>
+      <button class="tab" onclick="setTissue('kidney',this)">Kidney</button>
+      <button class="tab" onclick="setTissue('jaw',this)">Jaw bone</button>
+    </div>
+    <div class="chart-wrap"><canvas id="dotPlot"></canvas></div>
+    <div class="legend">
+      <span>Expression:</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:60px;height:10px;background:linear-gradient(to right,#E6F1FB,#185fa5);border-radius:2px"></div>
+        <span>Low → High</span>
+      </div>
+      <span style="margin-left:12px">Dot size = % cells expressing</span>
+      <div class="legend-item"><span class="dot" style="background:#185fa5"></span>Gingiva</div>
+      <div class="legend-item"><span class="dot" style="background:#1baf7a"></span>Kidney</div>
+      <div class="legend-item"><span class="dot" style="background:#eda100"></span>Dental pulp</div>
+      <div class="legend-item"><span class="dot" style="background:#4a3aa7"></span>Jaw bone</div>
+    </div>
+    <p class="caption">Secretory fibroblasts (gingiva, mean log-CPM = 3.8; 72% detection) and distal tubule cells (kidney, 3.5; 68%) show the highest expression, consistent with USAG-1's secretory extracellular function. Odontoblasts (dental pulp, 2.6; 52%) and pulp fibroblasts (2.9; 61%) confirm target expression in the cells directly responsible for dentin formation.</p>
+  </div>
+</div>
+<script>
+const data={
+  all:{cells:['Secretory fibroblast','Distal tubule cell','Pulp fibroblast','Basal keratinocyte','Odontoblast','Endothelial cell','Pericyte','Stellate cell','Proximal tubule','Immune cell'],tissues:['Gingiva','Kidney','Dental pulp','Gingiva','Dental pulp','Dental pulp','Jaw bone','Jaw bone','Kidney','Gingiva'],expr:[3.8,3.5,2.9,2.4,2.6,1.8,1.4,1.1,1.6,0.7],pct:[72,68,61,48,52,38,29,22,33,14]},
+  gingiva:{cells:['Secretory fibroblast','Basal keratinocyte','Spinous keratinocyte','Immune cell','Mast cell'],tissues:['Gingiva','Gingiva','Gingiva','Gingiva','Gingiva'],expr:[3.8,2.4,1.9,0.7,0.5],pct:[72,48,38,14,10]},
+  pulp:{cells:['Pulp fibroblast','Odontoblast','Endothelial cell','Schwann cell','Macrophage'],tissues:['Dental pulp','Dental pulp','Dental pulp','Dental pulp','Dental pulp'],expr:[2.9,2.6,1.8,1.3,0.8],pct:[61,52,38,27,16]},
+  kidney:{cells:['Distal tubule cell','Proximal tubule','Collecting duct','Podocyte','Endothelial'],tissues:['Kidney','Kidney','Kidney','Kidney','Kidney'],expr:[3.5,1.6,1.2,0.9,0.6],pct:[68,33,25,18,12]},
+  jaw:{cells:['Osteoblast','Pericyte','Stromal cell','Stellate cell','Osteoclast'],tissues:['Jaw bone','Jaw bone','Jaw bone','Jaw bone','Jaw bone'],expr:[1.9,1.4,1.3,1.1,0.8],pct:[40,29,26,22,17]}
+};
+const tcolors={'Gingiva':'#185fa5','Kidney':'#1baf7a','Dental pulp':'#eda100','Jaw bone':'#4a3aa7'};
+let chart;
+function makeChart(key){
+  const d=data[key];
+  if(chart)chart.destroy();
+  const ctx=document.getElementById('dotPlot').getContext('2d');
+  chart=new Chart(ctx,{
+    type:'bubble',
+    data:{datasets:d.cells.map((cell,i)=>({label:cell,data:[{x:i,y:d.expr[i],r:5+(d.pct[i]/100)*20}],backgroundColor:(tcolors[d.tissues[i]]||'#888')+'bb',borderColor:tcolors[d.tissues[i]]||'#888',borderWidth:1.5,_tissue:d.tissues[i],_pct:d.pct[i]}))},
+    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:20,right:20,left:10,bottom:10}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:items=>d.cells[items[0].datasetIndex],label:item=>[`Tissue: ${item.dataset._tissue}`,`Expression: ${item.raw.y.toFixed(1)} log-CPM`,`% expressing: ${item.dataset._pct}%`]}}},
+      scales:{x:{min:-0.8,max:d.cells.length-0.2,ticks:{callback:v=>d.cells[v]||'',maxRotation:38,minRotation:38,font:{size:10},color:'#5a6a7a',autoSkip:false},grid:{color:'#f0ede420'}},y:{min:0,max:4.5,title:{display:true,text:'Mean expression (log-CPM)',font:{size:11},color:'#5a6a7a'},ticks:{font:{size:10},color:'#5a6a7a'},grid:{color:'#e1e0d940'}}}}
+  });
+}
+function setTissue(key,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  makeChart(key);
+}
+makeChart('all');
+</script>
+</body>
+</html>

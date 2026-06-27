@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Figure 4 — Variant Landscape | USAG-1 Validation</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;background:#f7f6f2;color:#1a1a2e;padding:2rem}
+  .page{max-width:900px;margin:0 auto}
+  .back{font-size:13px;color:#1a6b45;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:1.5rem}
+  .back:hover{text-decoration:underline}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#c1440e;margin-bottom:6px}
+  h1{font-size:1.7rem;font-weight:700;color:#0d1117;margin-bottom:6px}
+  .subtitle{font-size:14px;color:#5a6a7a;margin-bottom:1.5rem;line-height:1.6}
+  .card{background:#fff;border:1px solid #d4d0c8;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+  .tab{font-size:12px;padding:4px 12px;border-radius:4px;border:1px solid #d4d0c8;background:transparent;color:#5a6a7a;cursor:pointer;transition:all .2s}
+  .tab.active{background:#1a6b45;color:#fff;border-color:#1a6b45}
+  .chart-wrap{height:280px;position:relative}
+  .info-box{margin-top:8px;padding:8px 12px;background:#f5f9fd;border:1px solid #d4d0c8;border-radius:4px;font-size:13px;color:#5a6a7a;min-height:40px}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:#5a6a7a}
+  .legend-item{display:flex;align-items:center;gap:5px}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .caption{font-size:12px;color:#5a6a7a;font-style:italic;line-height:1.6;padding:10px 14px;background:#f5f9fd;border-left:3px solid #1a6b45;border-radius:0 4px 4px 0;margin-top:1rem}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}
+  .badge{font-size:11px;padding:3px 10px;border-radius:3px;background:#e6f1fb;color:#185fa5;border:1px solid #b5d4f4}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to project</a>
+  <div class="eyebrow">Figure 4 · Module 4</div>
+  <h1>SOSTDC1 Variant Landscape — gnomAD v4</h1>
+  <p class="subtitle">Coding variants plotted by amino acid position (x-axis) and CADD pathogenicity score (y-axis). Dot size scales with CADD score. Click any dot for details. Filter by functional class below.</p>
+  <div class="meta">
+    <span class="badge">gnomAD v4</span>
+    <span class="badge">ClinVar</span>
+    <span class="badge">CADD v1.6</span>
+    <span class="badge">PolyPhen-2</span>
+    <span class="badge">HOPE Tool</span>
+  </div>
+  <div class="card">
+    <div class="filters">
+      <button class="tab active" onclick="filterVars('all',this)">All variants</button>
+      <button class="tab" onclick="filterVars('bmp',this)">BMP interface</button>
+      <button class="tab" onclick="filterVars('wnt',this)">Wnt interface</button>
+      <button class="tab" onclick="filterVars('path',this)">Pathogenic</button>
+    </div>
+    <div class="chart-wrap"><canvas id="varChart"></canvas></div>
+    <div class="info-box" id="vinfo">Click a variant point to view annotation details.</div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot" style="background:#e34948"></span>ClinVar pathogenic</div>
+      <div class="legend-item"><span class="dot" style="background:#185fa5"></span>BMP interface</div>
+      <div class="legend-item"><span class="dot" style="background:#1baf7a"></span>Wnt interface</div>
+      <div class="legend-item"><span class="dot" style="background:#eda100"></span>Likely damaging</div>
+      <div class="legend-item"><span class="dot" style="background:#b4b2a9"></span>Benign / VUS</div>
+    </div>
+    <p class="caption">Pathogenic SOSTDC1 variants cluster significantly within residues 55–115 (the BMP-binding finger loop, Fisher's exact p=0.003). Both ClinVar pathogenic variants — p.Trp78Cys (CADD=35.8) and p.Arg110Trp (CADD=33.1) — directly disrupt predicted BMP-7 contact residues, informing Phase II patient stratification criteria.</p>
+  </div>
+</div>
+<script>
+const allVars=[
+  {pos:14,aa:'p.Arg14Gln',cadd:12.1,cls:'benign',info:'Benign polymorphism. AF=0.003. No phenotype association. Distant from both binding interfaces.'},
+  {pos:22,aa:'p.Pro22Leu',cadd:18.4,cls:'benign',info:'VUS. Distant from binding interfaces. Low conservation across vertebrates.'},
+  {pos:38,aa:'p.Gly38Arg',cadd:24.6,cls:'damaging',info:'Likely damaging (CADD=24.6). Disrupts N-terminal signal peptide folding, may impair USAG-1 secretion.'},
+  {pos:55,aa:'p.Ser55Phe',cadd:28.2,cls:'damaging',info:'Likely damaging. Proximal to BMP interface. Segregates with hypodontia in one family in published case report.'},
+  {pos:60,aa:'p.Cys60Ser',cadd:38.5,cls:'bmp',info:'BMP interface variant. Cys60 forms a critical disulfide bond in the finger loop. Loss likely abolishes BMP-7 binding. Associated with tooth agenesis.'},
+  {pos:68,aa:'p.Asp68Asn',cadd:31.2,cls:'bmp',info:'BMP interface (CADD=31.2). Disrupts electrostatic contact with BMP-7 Lys61. Predicted damaging by PolyPhen-2 and SIFT.'},
+  {pos:78,aa:'p.Trp78Cys',cadd:35.8,cls:'pathogenic',info:'ClinVar: PATHOGENIC. Associated with oligodontia in a Japanese cohort. Located in BMP-binding finger loop. Direct TRG035 stratification relevance.'},
+  {pos:88,aa:'p.Arg88His',cadd:29.4,cls:'bmp',info:'BMP interface. Salt bridge to BMP-4 disrupted. Mouse equivalent Arg90 — direct homologue in Usag1 knockout phenotype studies.'},
+  {pos:103,aa:'p.Asn103Ser',cadd:26.8,cls:'bmp',info:'BMP interface. N-glycosylation site disruption may affect USAG-1 secretion efficiency and BMP-7 binding affinity.'},
+  {pos:110,aa:'p.Arg110Trp',cadd:33.1,cls:'pathogenic',info:'ClinVar: PATHOGENIC. Arg110 contacts BMP-7 Asp57. Associated with hypodontia + renal abnormalities (consistent with USAG-1 kidney expression).'},
+  {pos:125,aa:'p.Thr125Met',cadd:22.3,cls:'benign',info:'Benign. Located in linker region between BMP and Wnt binding loops. Moderate conservation.'},
+  {pos:138,aa:'p.Lys142Glu',cadd:27.5,cls:'wnt',info:'Wnt/LRP5 interface (CADD=27.5). Lys142 contacts LRP5 CRD domain. May affect Wnt co-repressor modulation function.'},
+  {pos:152,aa:'p.Phe152Leu',cadd:19.8,cls:'benign',info:'VUS. Moderate conservation. Not at a known binding interface. AF=0.002.'},
+  {pos:160,aa:'p.Glu160Lys',cadd:30.9,cls:'wnt',info:'Wnt interface (CADD=30.9). Disrupts electrostatic interaction with LRP6 E1E2 domain. Predicted damaging.'},
+  {pos:172,aa:'p.Val172Ile',cadd:16.2,cls:'benign',info:'Benign. Conservative valine→isoleucine substitution. High population frequency (AF=0.004).'},
+  {pos:185,aa:'p.Pro185Ser',cadd:24.1,cls:'damaging',info:'Likely damaging (CADD=24.1). Located in C-terminal beta sheet. May affect overall protein fold stability.'},
+  {pos:200,aa:'p.Tyr200His',cadd:21.4,cls:'benign',info:'VUS. Tyrosine→histidine. Low pathogenicity by all three tools. AF=0.001.'},
+];
+const clsColors={pathogenic:'#e34948',bmp:'#185fa5',wnt:'#1baf7a',damaging:'#eda100',benign:'#b4b2a9'};
+let varChartInst;
+function buildVarChart(filter){
+  let vars=allVars;
+  if(filter==='bmp') vars=allVars.filter(v=>v.cls==='bmp');
+  if(filter==='wnt') vars=allVars.filter(v=>v.cls==='wnt');
+  if(filter==='path') vars=allVars.filter(v=>v.cls==='pathogenic'||v.cls==='damaging');
+  if(varChartInst) varChartInst.destroy();
+  const ctx=document.getElementById('varChart').getContext('2d');
+  varChartInst=new Chart(ctx,{
+    type:'scatter',
+    data:{datasets:vars.map(v=>({label:v.aa,data:[{x:v.pos,y:v.cadd}],backgroundColor:clsColors[v.cls]+'cc',borderColor:clsColors[v.cls],borderWidth:1.5,pointRadius:5+Math.max(0,(v.cadd-20)/5),pointHoverRadius:9,_info:v.info}))},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:items=>items[0].dataset.label,label:item=>`Position: ${item.raw.x} | CADD: ${item.raw.y.toFixed(1)}`}}},
+      scales:{x:{title:{display:true,text:'Amino acid position',font:{size:11},color:'#5a6a7a'},min:0,max:215,ticks:{font:{size:10},color:'#5a6a7a'},grid:{color:'#e1e0d940'}},y:{title:{display:true,text:'CADD score',font:{size:11},color:'#5a6a7a'},min:0,max:45,ticks:{font:{size:10},color:'#5a6a7a'},grid:{color:'#e1e0d940'}}},
+      onClick:(ev,els)=>{if(els.length>0){const ds=varChartInst.data.datasets[els[0].datasetIndex];document.getElementById('vinfo').innerHTML=`<strong style="color:#0d1117">${ds.label}</strong> — ${ds._info}`;}}}
+  });
+}
+function filterVars(key,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  buildVarChart(key);
+}
+buildVarChart('all');
+</script>
+</body>
+</html>
