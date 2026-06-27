@@ -9,6 +9,9 @@
 > Computational validation of **USAG-1 (SOSTDC1)** as a human tooth regeneration target,
 > motivated by the completed TRG035 Phase I clinical trial (jRCT2051240154, Japan).
 
+## Interactive Figures
+
+[![View All Figures](https://img.shields.io/badge/figures-View%20Interactive%20Figures-1a6b45?style=for-the-badge)](https://mtariqi.github.io/USAG1-Validation/all_figures.html)
 ---
 
 ## Overview
