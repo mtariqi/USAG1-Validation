@@ -127,22 +127,11 @@ biomaRt           glmnet      msigdbr
 
 ---
 
-## GitHub Pages
-
-The interactive project website is served from `docs/index.html`.
-
-To enable after forking:
-1. Go to **Settings → Pages**
-2. Source: **Deploy from a branch** → Branch: `main` → Folder: `/docs`
-3. Save — site is live at `https://<your-username>.github.io/USAG1-Validation/`
-
----
-
 ## Citation
 
 ```bibtex
 @software{tariq_usag1_2026,
-  author    = {Tariq, Muhammad},
+  author    = {Md Tariqul, Islam},
   title     = {Computational Validation of USAG-1 (SOSTDC1) as a Human Tooth Regeneration Target},
   year      = {2026},
   publisher = {GitHub},
@@ -168,6 +157,6 @@ All external data remains subject to the terms of the originating repositories
 
 ## Contact
 
-**Muhammad Tariq** · [@mtariqi](https://github.com/mtariqi)
+**Md Tariqul Islam** · [@mtariqi](https://github.com/mtariqi)
 
 Issues and pull requests welcome. Please open an issue before submitting major changes.
